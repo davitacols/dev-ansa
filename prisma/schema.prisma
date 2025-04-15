@@ -10,20 +10,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String    @unique
-  emailVerified DateTime?
-  image         String?
-  password      String?
-  role          Role      @default(USER)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  accounts      Account[]
-  sessions      Session[]
-}
-
 model Account {
   id                String  @id @default(cuid())
   userId            String
@@ -51,34 +37,22 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          Role      @default(USER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
-  @@unique([identifier, token])
-}
-
-model FeatureSuggestion {
-  id         String             @id @default(cuid())
-  name       String
-  email      String
-  category   String?
-  suggestion String             @db.Text
-  status     SuggestionStatus   @default(NEW)
-  createdAt  DateTime           @default(now())
-  updatedAt  DateTime           @updatedAt
-  comments   SuggestionComment[]
-}
-
-model SuggestionComment {
-  id          String           @id @default(cuid())
-  content     String           @db.Text
-  authorId    String
-  suggestionId String
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
-  suggestion  FeatureSuggestion @relation(fields: [suggestionId], references: [id], onDelete: Cascade)
+  accounts        Account[]
+  sessions        Session[]
+  posts           BlogPost[]
+  comments        Comment[]
+  featureSuggestionComments SuggestionComment[]
 }
 
 enum Role {
@@ -86,10 +60,82 @@ enum Role {
   ADMIN
 }
 
-enum SuggestionStatus {
+model FeatureSuggestion {
+  id         String             @id @default(cuid())
+  name       String
+  email      String
+  category   String?
+  suggestion String
+  status     FeatureSuggestionStatus @default(NEW)
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+  comments   SuggestionComment[]
+}
+
+enum FeatureSuggestionStatus {
   NEW
   REVIEWING
   PLANNED
   IMPLEMENTED
   DECLINED
+}
+
+model SuggestionComment {
+  id           String           @id @default(cuid())
+  content      String
+  authorId     String
+  author       User             @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  suggestionId String
+  suggestion   FeatureSuggestion @relation(fields: [suggestionId], references: [id], onDelete: Cascade)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+}
+
+// Blog Models
+model BlogPost {
+  id          String      @id @default(cuid())
+  title       String
+  slug        String      @unique
+  excerpt     String?
+  content     String      @db.Text
+  featuredImage String?
+  published   Boolean     @default(false)
+  authorId    String
+  author      User        @relation(fields: [authorId], references: [id])
+  categoryId  String?
+  category    Category?   @relation(fields: [categoryId], references: [id])
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  tags        Tag[]       @relation("PostToTag")
+  comments    Comment[]
+  viewCount   Int         @default(0)
+}
+
+model Category {
+  id          String      @id @default(cuid())
+  name        String      @unique
+  slug        String      @unique
+  description String?
+  posts       BlogPost[]
+}
+
+model Tag {
+  id          String      @id @default(cuid())
+  name        String      @unique
+  slug        String      @unique
+  posts       BlogPost[]  @relation("PostToTag")
+}
+
+model Comment {
+  id          String      @id @default(cuid())
+  content     String
+  authorId    String
+  author      User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  postId      String
+  post        BlogPost    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  parentId    String?
+  parent      Comment?    @relation("CommentToComment", fields: [parentId], references: [id], onDelete: Cascade)
+  children    Comment[]   @relation("CommentToComment")
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 }
