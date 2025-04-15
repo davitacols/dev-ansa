@@ -19,7 +19,7 @@ export default function ProgrammaticUsagePage() {
         </h3>
         <p>To extract and display the structure of a directory:</p>
         <CodeBlock
-          code={`import { extractStructure, formatAsTree } from '@davitacols/ansa-fs';
+          code={`import { extractStructure, formatAsTree } from 'ansa-fs';
 
 async function example() {
   // Extract the structure of a directory
@@ -36,7 +36,7 @@ example();`}
         <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">With Custom Options</h3>
         <p>To extract a structure with custom options:</p>
         <CodeBlock
-          code={`import { extractStructure } from '@davitacols/ansa-fs';
+          code={`import { extractStructure } from 'ansa-fs';
 
 async function example() {
   const structure = await extractStructure('./my-project', {
@@ -99,7 +99,7 @@ example();`}
         <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">Watch Mode</h3>
         <p>To watch a directory for changes and get real-time updates:</p>
         <CodeBlock
-          code={`import { watchStructure, formatAsTree } from '@davitacols/ansa-fs';
+          code={`import { watchStructure, formatAsTree } from 'ansa-fs';
 
 function example() {
   console.log('Watching directory for changes...');
@@ -136,7 +136,7 @@ example();`}
         <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">Export to Markdown</h3>
         <p>To export the structure as Markdown documentation:</p>
         <CodeBlock
-          code={`import { extractStructure, exportToMarkdown } from '@davitacols/ansa-fs';
+          code={`import { extractStructure, exportToMarkdown } from 'ansa-fs';
 import fs from 'fs/promises';
 
 async function example() {
@@ -161,7 +161,7 @@ example();`}
         <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">Content Analysis</h3>
         <p>To analyze file contents and detect programming languages:</p>
         <CodeBlock
-          code={`import { extractStructure } from '@davitacols/ansa-fs';
+          code={`import { extractStructure } from 'ansa-fs';
 
 async function example() {
   const structure = await extractStructure('./src', {
@@ -207,7 +207,7 @@ example();`}
         <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">Getting Statistics</h3>
         <p>To get statistics about the structure:</p>
         <CodeBlock
-          code={`import { extractStructure, getStats } from '@davitacols/ansa-fs';
+          code={`import { extractStructure, getStats } from 'ansa-fs';
 
 async function example() {
   const structure = await extractStructure('./my-project');
@@ -239,7 +239,7 @@ example();`}
         <h3 className="scroll-m-20 text-xl font-semibold tracking-tight">Filtering the Structure</h3>
         <p>To filter the structure based on a predicate function:</p>
         <CodeBlock
-          code={`import { extractStructure, filter, formatAsTree } from '@davitacols/ansa-fs';
+          code={`import { extractStructure, filter, formatAsTree } from 'ansa-fs';
 
 async function example() {
   const structure = await extractStructure('./my-project');
