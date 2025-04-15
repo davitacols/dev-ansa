@@ -1,7 +1,7 @@
 import type React from "react"
 import "@/app/globals.css"
 import { Inter } from "next/font/google"
-import { ThemeProvider } from "@/components/theme-provider"
+import { Providers } from "@/components/providers"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 
@@ -31,13 +31,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className} suppressHydrationWarning>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <Providers>
           <div className="relative flex min-h-screen flex-col bg-zinc-50 dark:bg-zinc-900">
             <SiteHeader />
             <div className="flex-1">{children}</div>
             <SiteFooter />
           </div>
-        </ThemeProvider>
+        </Providers>
       </body>
     </html>
   )

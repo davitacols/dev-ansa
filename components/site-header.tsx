@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
-import { FolderTreeIcon as FileTree, Menu, Github } from "lucide-react"
+import { FolderTreeIcon as FileTree, Menu, Github, Lightbulb } from "lucide-react"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { DocSearch } from "@/components/doc-search"
 
@@ -45,6 +45,13 @@ export function SiteHeader() {
           >
             Demo
           </Link>
+          <Link
+            href="/feature-suggestions"
+            className="text-sm font-medium text-zinc-700 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 transition-colors flex items-center gap-1"
+          >
+            <Lightbulb className="h-4 w-4" />
+            Suggest
+          </Link>
         </nav>
 
         <div className="flex items-center gap-2">
@@ -83,6 +90,10 @@ export function SiteHeader() {
                 </Link>
                 <Link href="/demo" className="block px-2 py-1 text-lg">
                   Demo
+                </Link>
+                <Link href="/feature-suggestions" className="block px-2 py-1 text-lg flex items-center gap-2">
+                  <Lightbulb className="h-4 w-4" />
+                  Suggest Features
                 </Link>
                 <Link href="https://github.com/davitacols/ansa-fs" className="block px-2 py-1 text-lg">
                   GitHub
