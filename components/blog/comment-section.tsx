@@ -13,6 +13,7 @@ import { MessageSquare, Send, Loader2, ThumbsUp, Reply, MoreHorizontal } from "l
 import { toast } from "@/components/ui/use-toast"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
 
 interface Comment {
   id: string
@@ -44,6 +45,12 @@ export function CommentSection({ postId, comments: initialComments, className = 
   const [comments, setComments] = useState<Comment[]>(initialComments || [])
   const [likedComments, setLikedComments] = useState<Set<string>>(new Set())
 
+  // Guest comment state
+  const [showGuestForm, setShowGuestForm] = useState(false)
+  const [guestName, setGuestName] = useState("")
+  const [guestEmail, setGuestEmail] = useState("")
+  const [guestContent, setGuestContent] = useState("")
+
   const handleSubmitComment = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!content.trim()) return
@@ -69,6 +76,51 @@ export function CommentSection({ postId, comments: initialComments, className = 
       const newComment = await response.json()
       setComments([newComment, ...comments])
       setContent("")
+      toast({
+        title: "Comment submitted",
+        description: "Your comment has been posted successfully.",
+      })
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to submit your comment. Please try again.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleSubmitGuestComment = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!guestContent.trim() || !guestName.trim() || !guestEmail.trim()) return
+
+    setIsSubmitting(true)
+
+    try {
+      const response = await fetch("/api/blog/comments/guest", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          postId,
+          name: guestName,
+          email: guestEmail,
+          content: guestContent,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to submit comment")
+      }
+
+      const newComment = await response.json()
+      setComments([newComment, ...comments])
+      setGuestContent("")
+      setGuestName("")
+      setGuestEmail("")
+      setShowGuestForm(false)
       toast({
         title: "Comment submitted",
         description: "Your comment has been posted successfully.",
@@ -177,6 +229,32 @@ export function CommentSection({ postId, comments: initialComments, className = 
     // TODO: Send API request to update like count in database
   }
 
+  const handleDeleteComment = async (commentId: string) => {
+    try {
+      const response = await fetch(`/api/blog/comments/${commentId}`, {
+        method: "DELETE",
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to delete comment")
+      }
+
+      // Remove the comment from the UI
+      setComments(comments.filter((comment) => comment.id !== commentId))
+
+      toast({
+        title: "Comment deleted",
+        description: "Your comment has been deleted successfully.",
+      })
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete your comment. Please try again.",
+        variant: "destructive",
+      })
+    }
+  }
+
   return (
     <div className={`space-y-8 ${className}`}>
       <div className="flex items-center justify-between">
@@ -198,11 +276,11 @@ export function CommentSection({ postId, comments: initialComments, className = 
           <CardHeader>
             <div className="flex items-center gap-2">
               <Avatar>
-                <AvatarImage src={session.user?.image || undefined} alt={session.user?.name || "User"} />
-                <AvatarFallback>{session.user?.name?.charAt(0) || "U"}</AvatarFallback>
+                <AvatarImage src={session?.user?.image || undefined} alt={session?.user?.name || "User"} />
+                <AvatarFallback>{session?.user?.name?.charAt(0) || "U"}</AvatarFallback>
               </Avatar>
               <div>
-                <p className="font-medium">{session.user?.name}</p>
+                <p className="font-medium">{session?.user?.name}</p>
                 <p className="text-xs text-muted-foreground">Commenting as yourself</p>
               </div>
             </div>
@@ -237,14 +315,82 @@ export function CommentSection({ postId, comments: initialComments, className = 
       ) : (
         <Card>
           <CardContent className="pt-6">
-            <div className="flex flex-col items-center justify-center py-6 text-center">
-              <MessageSquare className="h-12 w-12 text-muted-foreground/50 mb-4" />
-              <h3 className="text-lg font-medium mb-2">Join the conversation</h3>
-              <p className="text-muted-foreground mb-4">Sign in to leave a comment and join the discussion.</p>
-              <Button asChild>
-                <a href="/login">Sign In</a>
-              </Button>
-            </div>
+            {showGuestForm ? (
+              <form onSubmit={handleSubmitGuestComment}>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label htmlFor="name" className="text-sm font-medium">
+                        Name
+                      </label>
+                      <Input
+                        id="name"
+                        placeholder="Your name"
+                        value={guestName}
+                        onChange={(e) => setGuestName(e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label htmlFor="email" className="text-sm font-medium">
+                        Email
+                      </label>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="Your email (not published)"
+                        value={guestEmail}
+                        onChange={(e) => setGuestEmail(e.target.value)}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label htmlFor="comment" className="text-sm font-medium">
+                      Comment
+                    </label>
+                    <Textarea
+                      id="comment"
+                      placeholder="Share your thoughts..."
+                      value={guestContent}
+                      onChange={(e) => setGuestContent(e.target.value)}
+                      className="min-h-[100px] resize-none"
+                      required
+                    />
+                  </div>
+                  <div className="flex justify-end gap-2">
+                    <Button type="button" variant="ghost" onClick={() => setShowGuestForm(false)}>
+                      Cancel
+                    </Button>
+                    <Button type="submit" disabled={isSubmitting} className="gap-1.5">
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          Submitting...
+                        </>
+                      ) : (
+                        <>
+                          <Send className="h-4 w-4" />
+                          Post Comment
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </div>
+              </form>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-6 text-center">
+                <MessageSquare className="h-12 w-12 text-muted-foreground/50 mb-4" />
+                <h3 className="text-lg font-medium mb-2">Join the conversation</h3>
+                <p className="text-muted-foreground mb-4">Sign in to leave a comment or comment as a guest.</p>
+                <div className="flex gap-2">
+                  <Button asChild variant="outline">
+                    <a href="/login">Sign In</a>
+                  </Button>
+                  <Button onClick={() => setShowGuestForm(true)}>Comment as Guest</Button>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       )}
@@ -272,6 +418,11 @@ export function CommentSection({ postId, comments: initialComments, className = 
                               Author
                             </Badge>
                           )}
+                          {!comment.author.image && (
+                            <Badge variant="outline" className="text-xs">
+                              Guest
+                            </Badge>
+                          )}
                         </div>
                         <div className="flex items-center gap-2">
                           <p className="text-xs text-muted-foreground">
@@ -286,8 +437,13 @@ export function CommentSection({ postId, comments: initialComments, className = 
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                               <DropdownMenuItem>Report</DropdownMenuItem>
-                              {session?.user?.id === comment.author.id && (
-                                <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
+                              {session?.user?.email === comment.author.id && (
+                                <DropdownMenuItem
+                                  className="text-destructive"
+                                  onClick={() => handleDeleteComment(comment.id)}
+                                >
+                                  Delete
+                                </DropdownMenuItem>
                               )}
                             </DropdownMenuContent>
                           </DropdownMenu>

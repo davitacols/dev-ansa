@@ -1,73 +1,96 @@
-import { NextResponse } from "next/server"
-import type { NextRequest } from "next/server"
-import { getServerSession } from "next-auth/next"
+import { type NextRequest, NextResponse } from "next/server"
+import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
-import { z } from "zod"
-
-const commentSchema = z.object({
-  postId: z.string(),
-  content: z.string().min(1, "Comment cannot be empty"),
-  parentId: z.string().optional(),
-})
 
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
 
-    if (!session) {
+    if (!session || !session.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const data = await request.json()
-    const validatedData = commentSchema.parse(data)
+    const { postId, content, parentId } = await request.json()
 
-    // Check if the post exists
+    if (!postId || !content) {
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
+    }
+
+    // Get user from database
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email as string },
+    })
+
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 })
+    }
+
+    // Check if post exists
     const post = await prisma.blogPost.findUnique({
-      where: { id: validatedData.postId },
+      where: { id: postId },
     })
 
     if (!post) {
       return NextResponse.json({ error: "Post not found" }, { status: 404 })
     }
 
-    // Check if parent comment exists if parentId is provided
-    if (validatedData.parentId) {
-      const parentComment = await prisma.comment.findUnique({
-        where: { id: validatedData.parentId },
-      })
-
-      if (!parentComment) {
-        return NextResponse.json({ error: "Parent comment not found" }, { status: 404 })
-      }
-    }
-
-    // Create the comment
+    // Create comment
     const comment = await prisma.comment.create({
       data: {
-        content: validatedData.content,
-        authorId: session.user.id,
-        postId: validatedData.postId,
-        parentId: validatedData.parentId,
+        content,
+        post: { connect: { id: postId } },
+        author: { connect: { id: user.id } },
+        ...(parentId && { parent: { connect: { id: parentId } } }),
       },
       include: {
         author: {
           select: {
             id: true,
             name: true,
+            email: true,
             image: true,
+            role: true,
           },
         },
       },
     })
 
-    return NextResponse.json(comment)
+    return NextResponse.json(comment, { status: 201 })
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: error.errors }, { status: 400 })
+    console.error("Error creating comment:", error)
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+  }
+}
+
+export async function GET(request: NextRequest) {
+  try {
+    const url = new URL(request.url)
+    const postId = url.searchParams.get("postId")
+
+    if (!postId) {
+      return NextResponse.json({ error: "Missing postId parameter" }, { status: 400 })
     }
 
-    console.error("Error creating comment:", error)
-    return NextResponse.json({ error: "Failed to create comment" }, { status: 500 })
+    const comments = await prisma.comment.findMany({
+      where: { postId },
+      orderBy: { createdAt: "desc" },
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            image: true,
+            role: true,
+          },
+        },
+      },
+    })
+
+    return NextResponse.json(comments)
+  } catch (error) {
+    console.error("Error fetching comments:", error)
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }
