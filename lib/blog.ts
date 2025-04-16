@@ -363,3 +363,11 @@ export async function getRelatedPosts(postId: string, categoryId?: string, tagId
     return []
   }
 }
+
+// Add the missing functions at the end of the file
+
+// Add getBlogPostBySlug alias for getPostBySlug
+export const getPostBySlug = getBlogPostBySlug
+
+// Add getPosts alias for getBlogPosts
+export const getPosts = getBlogPosts
