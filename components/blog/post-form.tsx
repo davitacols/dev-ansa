@@ -14,10 +14,24 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { slugify } from "@/lib/blog"
 import { toast } from "@/components/ui/use-toast"
 import { MarkdownRenderer } from "@/components/markdown-renderer"
-import { 
-  Eye, Pencil, FileImage, Link2, Code, ListOrdered, 
-  Bold, Italic, Heading2, Hash, ImageIcon, Undo, Redo,
-  ListChecks, Quote, CodeSquare, Save
+import {
+  Eye,
+  Pencil,
+  FileImage,
+  Link2,
+  Code,
+  ListOrdered,
+  Bold,
+  Italic,
+  Heading2,
+  Hash,
+  ImageIcon,
+  Undo,
+  Redo,
+  ListChecks,
+  Quote,
+  CodeSquare,
+  Save,
 } from "lucide-react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
@@ -169,12 +183,12 @@ export function PostForm({ categories, tags, initialData = {}, isEditing = false
               {isEditing ? "Edit Post" : "Create New Post"}
             </CardTitle>
             <CardDescription>
-              {isEditing 
-                ? "Update your existing blog post with new content and settings." 
+              {isEditing
+                ? "Update your existing blog post with new content and settings."
                 : "Create a new blog post with rich content and formatting."}
             </CardDescription>
           </CardHeader>
-          
+
           <CardContent className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormField
@@ -184,11 +198,7 @@ export function PostForm({ categories, tags, initialData = {}, isEditing = false
                   <FormItem>
                     <FormLabel className="text-sm font-medium">Title</FormLabel>
                     <FormControl>
-                      <Input 
-                        placeholder="Enter post title..." 
-                        {...field} 
-                        className="focus-visible:ring-emerald-500"
-                      />
+                      <Input placeholder="Enter post title..." {...field} className="focus-visible:ring-emerald-500" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -207,20 +217,14 @@ export function PostForm({ categories, tags, initialData = {}, isEditing = false
                           <div className="bg-zinc-100 dark:bg-zinc-800 px-2 flex items-center border-r text-sm text-zinc-500">
                             /blog/
                           </div>
-                          <Input 
-                            placeholder="post-slug" 
-                            {...field} 
+                          <Input
+                            placeholder="post-slug"
+                            {...field}
                             className="border-0 focus-visible:ring-emerald-500 rounded-none"
                           />
                         </div>
                       </FormControl>
-                      <Button 
-                        type="button" 
-                        variant="outline" 
-                        onClick={generateSlug}
-                        size="sm"
-                        className="text-xs"
-                      >
+                      <Button type="button" variant="outline" onClick={generateSlug} size="sm" className="text-xs">
                         <Hash className="h-3 w-3 mr-1" />
                         Generate
                       </Button>
@@ -239,9 +243,9 @@ export function PostForm({ categories, tags, initialData = {}, isEditing = false
                 <FormItem>
                   <FormLabel className="text-sm font-medium">Excerpt</FormLabel>
                   <FormControl>
-                    <Textarea 
-                      placeholder="Write a brief summary of your post..." 
-                      {...field} 
+                    <Textarea
+                      placeholder="Write a brief summary of your post..."
+                      {...field}
                       rows={3}
                       className="resize-none focus-visible:ring-emerald-500"
                     />
@@ -262,15 +266,13 @@ export function PostForm({ categories, tags, initialData = {}, isEditing = false
                   <div className="flex items-center justify-between">
                     <FormLabel className="text-sm font-medium">Content</FormLabel>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs text-zinc-500">
-                        {watchContent?.length || 0} characters
-                      </span>
+                      <span className="text-xs text-zinc-500">{watchContent?.length || 0} characters</span>
                     </div>
                   </div>
                   <FormDescription className="text-xs mb-2">
                     Write your post content using Markdown for rich formatting.
                   </FormDescription>
-                  
+
                   <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                     <div className="flex items-center justify-between mb-2">
                       <TabsList className="h-9 p-0.5">
@@ -283,7 +285,7 @@ export function PostForm({ categories, tags, initialData = {}, isEditing = false
                           <span>Preview</span>
                         </TabsTrigger>
                       </TabsList>
-                      
+
                       <div className="flex items-center gap-2">
                         <Button
                           type="button"
@@ -297,7 +299,7 @@ export function PostForm({ categories, tags, initialData = {}, isEditing = false
                         </Button>
                       </div>
                     </div>
-                    
+
                     <TabsContent value="edit" className="mt-0">
                       <TooltipProvider>
                         <div className="bg-zinc-50 dark:bg-zinc-900 rounded-t-md border border-b-0 p-1 flex flex-wrap gap-0.5">
@@ -316,7 +318,7 @@ export function PostForm({ categories, tags, initialData = {}, isEditing = false
                               </TooltipTrigger>
                               <TooltipContent side="bottom">Undo</TooltipContent>
                             </Tooltip>
-                            
+
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <Button
@@ -332,9 +334,9 @@ export function PostForm({ categories, tags, initialData = {}, isEditing = false
                               <TooltipContent side="bottom">Redo</TooltipContent>
                             </Tooltip>
                           </div>
-                          
+
                           <Separator orientation="vertical" className="h-8 mx-1" />
-                          
+
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Button
@@ -349,7 +351,7 @@ export function PostForm({ categories, tags, initialData = {}, isEditing = false
                             </TooltipTrigger>
                             <TooltipContent side="bottom">Bold</TooltipContent>
                           </Tooltip>
-                          
+
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Button
@@ -364,7 +366,7 @@ export function PostForm({ categories, tags, initialData = {}, isEditing = false
                             </TooltipTrigger>
                             <TooltipContent side="bottom">Italic</TooltipContent>
                           </Tooltip>
-                          
+
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Button
@@ -379,7 +381,7 @@ export function PostForm({ categories, tags, initialData = {}, isEditing = false
                             </TooltipTrigger>
                             <TooltipContent side="bottom">Heading</TooltipContent>
                           </Tooltip>
-                          
+
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Button
@@ -394,9 +396,9 @@ export function PostForm({ categories, tags, initialData = {}, isEditing = false
                             </TooltipTrigger>
                             <TooltipContent side="bottom">Quote</TooltipContent>
                           </Tooltip>
-                          
+
                           <Separator orientation="vertical" className="h-8 mx-1" />
-                          
+
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Button
@@ -411,7 +413,7 @@ export function PostForm({ categories, tags, initialData = {}, isEditing = false
                             </TooltipTrigger>
                             <TooltipContent side="bottom">Ordered List</TooltipContent>
                           </Tooltip>
-                          
+
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Button
@@ -426,9 +428,9 @@ export function PostForm({ categories, tags, initialData = {}, isEditing = false
                             </TooltipTrigger>
                             <TooltipContent side="bottom">Bullet List</TooltipContent>
                           </Tooltip>
-                          
+
                           <Separator orientation="vertical" className="h-8 mx-1" />
-                          
+
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Button
@@ -443,7 +445,7 @@ export function PostForm({ categories, tags, initialData = {}, isEditing = false
                             </TooltipTrigger>
                             <TooltipContent side="bottom">Inline Code</TooltipContent>
                           </Tooltip>
-                          
+
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Button
@@ -458,9 +460,9 @@ export function PostForm({ categories, tags, initialData = {}, isEditing = false
                             </TooltipTrigger>
                             <TooltipContent side="bottom">Code Block</TooltipContent>
                           </Tooltip>
-                          
+
                           <Separator orientation="vertical" className="h-8 mx-1" />
-                          
+
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Button
@@ -475,7 +477,7 @@ export function PostForm({ categories, tags, initialData = {}, isEditing = false
                             </TooltipTrigger>
                             <TooltipContent side="bottom">Link</TooltipContent>
                           </Tooltip>
-                          
+
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <Button
@@ -492,7 +494,7 @@ export function PostForm({ categories, tags, initialData = {}, isEditing = false
                           </Tooltip>
                         </div>
                       </TooltipProvider>
-                      
+
                       <FormControl>
                         <Textarea
                           placeholder="Start writing your post here..."
@@ -502,7 +504,7 @@ export function PostForm({ categories, tags, initialData = {}, isEditing = false
                         />
                       </FormControl>
                     </TabsContent>
-                    
+
                     <TabsContent value="preview" className="mt-0">
                       <ScrollArea className="w-full border rounded-md p-6 bg-white dark:bg-zinc-950 min-h-[400px] max-h-[500px]">
                         {watchContent ? (
@@ -511,7 +513,9 @@ export function PostForm({ categories, tags, initialData = {}, isEditing = false
                           <div className="flex flex-col items-center justify-center h-full min-h-[300px] text-center">
                             <Eye className="h-12 w-12 text-zinc-300 dark:text-zinc-700 mb-2" />
                             <p className="text-zinc-500 dark:text-zinc-400">Nothing to preview yet...</p>
-                            <p className="text-zinc-400 dark:text-zinc-500 text-sm">Start writing in the editor to see a preview.</p>
+                            <p className="text-zinc-400 dark:text-zinc-500 text-sm">
+                              Start writing in the editor to see a preview.
+                            </p>
                           </div>
                         )}
                       </ScrollArea>
@@ -532,17 +536,17 @@ export function PostForm({ categories, tags, initialData = {}, isEditing = false
                     <div className="flex flex-col gap-3">
                       <FormControl>
                         <div className="flex gap-2">
-                          <Input 
-                            placeholder="https://example.com/image.jpg" 
+                          <Input
+                            placeholder="https://example.com/image.jpg"
                             {...field}
-                            className="focus-visible:ring-emerald-500" 
+                            className="focus-visible:ring-emerald-500"
                           />
                           <Button type="button" variant="outline" size="icon" className="shrink-0">
                             <FileImage className="h-4 w-4" />
                           </Button>
                         </div>
                       </FormControl>
-                      
+
                       {field.value && (
                         <div className="mt-2 relative aspect-video rounded-md overflow-hidden bg-zinc-100 dark:bg-zinc-800">
                           <div className="flex items-center justify-center h-full">
@@ -551,7 +555,7 @@ export function PostForm({ categories, tags, initialData = {}, isEditing = false
                           {/* Image preview would be shown here if uploaded */}
                         </div>
                       )}
-                      
+
                       <FormDescription className="text-xs">
                         URL to the featured image that appears at the top of your post and in social shares.
                       </FormDescription>
@@ -594,10 +598,10 @@ export function PostForm({ categories, tags, initialData = {}, isEditing = false
                   render={({ field }) => (
                     <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
                       <FormControl>
-                        <Checkbox 
-                          checked={field.value} 
+                        <Checkbox
+                          checked={field.value}
                           onCheckedChange={field.onChange}
-                          className="data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600" 
+                          className="data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600"
                         />
                       </FormControl>
                       <div className="space-y-1 leading-none">
@@ -618,10 +622,10 @@ export function PostForm({ categories, tags, initialData = {}, isEditing = false
                 <div className="flex flex-wrap gap-2 mb-2">
                   {selectedTags.length > 0 ? (
                     selectedTags.map((tagId) => {
-                      const tag = tags.find(t => t.id === tagId)
+                      const tag = tags.find((t) => t.id === tagId)
                       return tag ? (
-                        <Badge 
-                          key={tag.id} 
+                        <Badge
+                          key={tag.id}
                           variant="secondary"
                           className="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-900/20 dark:text-emerald-400"
                         >
@@ -633,7 +637,7 @@ export function PostForm({ categories, tags, initialData = {}, isEditing = false
                     <p className="text-sm text-zinc-500">No tags selected</p>
                   )}
                 </div>
-                
+
                 <ScrollArea className="h-32 border rounded-md p-2">
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                     {tags.map((tag) => (
@@ -644,10 +648,7 @@ export function PostForm({ categories, tags, initialData = {}, isEditing = false
                           onCheckedChange={(checked) => handleTagChange(tag.id, checked as boolean)}
                           className="data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600"
                         />
-                        <label
-                          htmlFor={`tag-${tag.id}`}
-                          className="text-sm leading-none cursor-pointer"
-                        >
+                        <label htmlFor={`tag-${tag.id}`} className="text-sm leading-none cursor-pointer">
                           {tag.name}
                         </label>
                       </div>
@@ -657,25 +658,37 @@ export function PostForm({ categories, tags, initialData = {}, isEditing = false
               </div>
             </div>
           </CardContent>
-          
+
           <CardFooter className="flex justify-between pt-6 border-t">
-            <Button 
-              type="button" 
-              variant="outline" 
-              onClick={() => router.push("/admin/blog")}
-            >
+            <Button type="button" variant="outline" onClick={() => router.push("/admin/blog")}>
               Cancel
             </Button>
-            <Button 
-              type="submit" 
-              disabled={isSubmitting} 
+            <Button
+              type="submit"
+              disabled={isSubmitting}
               className="bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white"
             >
               {isSubmitting ? (
                 <>
-                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  <svg
+                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
                   </svg>
                   Saving...
                 </>
