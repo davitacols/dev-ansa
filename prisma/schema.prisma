@@ -45,14 +45,11 @@ model User {
   image         String?
   password      String?
   role          Role      @default(USER)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-
-  accounts        Account[]
-  sessions        Session[]
-  posts           BlogPost[]
-  comments        Comment[]
-  featureSuggestionComments SuggestionComment[]
+  accounts      Account[]
+  sessions      Session[]
+  posts         BlogPost[]
+  comments      Comment[]
+  suggestions   FeatureSuggestion[]
 }
 
 enum Role {
@@ -60,82 +57,87 @@ enum Role {
   ADMIN
 }
 
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
 model FeatureSuggestion {
-  id         String             @id @default(cuid())
-  name       String
-  email      String
-  category   String?
-  suggestion String
-  status     FeatureSuggestionStatus @default(NEW)
-  createdAt  DateTime           @default(now())
-  updatedAt  DateTime           @updatedAt
-  comments   SuggestionComment[]
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  status      Status   @default(PENDING)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id])
+  comments    FeatureSuggestionComment[]
 }
 
-enum FeatureSuggestionStatus {
-  NEW
-  REVIEWING
-  PLANNED
-  IMPLEMENTED
-  DECLINED
-}
-
-model SuggestionComment {
-  id           String           @id @default(cuid())
-  content      String
-  authorId     String
-  author       User             @relation(fields: [authorId], references: [id], onDelete: Cascade)
+model FeatureSuggestionComment {
+  id          String   @id @default(cuid())
+  content     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   suggestionId String
-  suggestion   FeatureSuggestion @relation(fields: [suggestionId], references: [id], onDelete: Cascade)
-  createdAt    DateTime         @default(now())
-  updatedAt    DateTime         @updatedAt
+  suggestion  FeatureSuggestion @relation(fields: [suggestionId], references: [id], onDelete: Cascade)
+}
+
+enum Status {
+  PENDING
+  APPROVED
+  REJECTED
+  IMPLEMENTED
 }
 
 // Blog Models
 model BlogPost {
-  id          String      @id @default(cuid())
-  title       String
-  slug        String      @unique
-  excerpt     String?
-  content     String      @db.Text
+  id            String    @id @default(cuid())
+  title         String
+  slug          String    @unique
+  excerpt       String?
+  content       String
   featuredImage String?
-  published   Boolean     @default(false)
-  authorId    String
-  author      User        @relation(fields: [authorId], references: [id])
-  categoryId  String?
-  category    Category?   @relation(fields: [categoryId], references: [id])
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  tags        Tag[]       @relation("PostToTag")
-  comments    Comment[]
-  viewCount   Int         @default(0)
+  published     Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  viewCount     Int       @default(0)
+  authorId      String
+  author        User      @relation(fields: [authorId], references: [id])
+  categoryId    String?
+  category      Category? @relation(fields: [categoryId], references: [id])
+  tags          Tag[]
+  comments      Comment[]
 }
 
 model Category {
-  id          String      @id @default(cuid())
-  name        String      @unique
-  slug        String      @unique
+  id          String     @id @default(cuid())
+  name        String
+  slug        String     @unique
   description String?
   posts       BlogPost[]
 }
 
 model Tag {
-  id          String      @id @default(cuid())
-  name        String      @unique
-  slug        String      @unique
-  posts       BlogPost[]  @relation("PostToTag")
+  id    String     @id @default(cuid())
+  name  String
+  slug  String     @unique
+  posts BlogPost[]
 }
 
 model Comment {
-  id          String      @id @default(cuid())
-  content     String
-  authorId    String
-  author      User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  postId      String
-  post        BlogPost    @relation(fields: [postId], references: [id], onDelete: Cascade)
-  parentId    String?
-  parent      Comment?    @relation("CommentToComment", fields: [parentId], references: [id], onDelete: Cascade)
-  children    Comment[]   @relation("CommentToComment")
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id        String    @id @default(cuid())
+  content   String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  authorId  String
+  author    User      @relation(fields: [authorId], references: [id])
+  postId    String
+  post      BlogPost  @relation(fields: [postId], references: [id], onDelete: Cascade)
+  parentId  String?
+  parent    Comment?  @relation("CommentToComment", fields: [parentId], references: [id])
+  replies   Comment[] @relation("CommentToComment")
 }

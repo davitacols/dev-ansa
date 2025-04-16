@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
-import { FolderTreeIcon as FileTree, Menu, Github, Lightbulb, ChevronDown } from "lucide-react"
+import { FolderTreeIcon as FileTree, Menu, Github, Lightbulb, ChevronDown, BookOpen } from "lucide-react"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { DocSearch } from "@/components/doc-search"
 import { motion, AnimatePresence } from "framer-motion"
@@ -30,6 +30,12 @@ export function SiteHeader() {
     { href: "/docs/installation", label: "Installation" },
     { href: "/docs/usage", label: "Usage" },
     { href: "/docs/api", label: "API" },
+  ]
+
+  const blogLinks = [
+    { href: "/blog", label: "All Posts" },
+    { href: "/blog/categories", label: "Categories" },
+    { href: "/blog/tags", label: "Tags" },
   ]
 
   return (
@@ -88,6 +94,45 @@ export function SiteHeader() {
                 >
                   <div className="py-1">
                     {docsLinks.map((link) => (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        className="block px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800 transition-colors"
+                        onClick={() => setActiveDropdown(null)}
+                      >
+                        {link.label}
+                      </Link>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Blog Dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => toggleDropdown("blog")}
+              className="flex items-center gap-1 text-sm font-medium text-zinc-700 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-100 transition-colors"
+            >
+              <BookOpen className="h-4 w-4 text-emerald-500 mr-1" />
+              Blog
+              <ChevronDown
+                className={`h-4 w-4 transition-transform duration-200 ${activeDropdown === "blog" ? "rotate-180" : ""}`}
+              />
+            </button>
+
+            <AnimatePresence>
+              {activeDropdown === "blog" && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute top-full mt-1 w-48 rounded-md bg-white dark:bg-zinc-900 shadow-lg ring-1 ring-black ring-opacity-5 dark:ring-zinc-700 overflow-hidden z-50"
+                >
+                  <div className="py-1">
+                    {blogLinks.map((link) => (
                       <Link
                         key={link.href}
                         href={link.href}
@@ -168,6 +213,19 @@ export function SiteHeader() {
                     Documentation
                   </p>
                   {docsLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className="block px-2 py-2 text-base rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+
+                <div className="px-1 py-2 border-t border-zinc-200 dark:border-zinc-800">
+                  <p className="text-xs uppercase text-zinc-500 dark:text-zinc-400 font-medium mb-2 ml-2">Blog</p>
+                  {blogLinks.map((link) => (
                     <Link
                       key={link.href}
                       href={link.href}

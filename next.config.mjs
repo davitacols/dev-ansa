@@ -27,6 +27,10 @@ const nextConfig = {
     parallelServerBuildTraces: true,
     parallelServerCompiles: true,
   },
+  webpack: (config) => {
+    config.cache = false; // ✅ Disable cache to avoid memory issues
+    return config;
+  },
 }
 
 if (userConfig) {

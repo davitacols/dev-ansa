@@ -85,3 +85,37 @@
 .prose tr:nth-child(even) {
   @apply bg-zinc-50 dark:bg-zinc-900;
 }
+
+/* Markdown code highlighting */
+.prose pre {
+  background-color: #1e1e1e;
+  border-radius: 0.375rem;
+  color: #d4d4d4;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.875rem;
+  line-height: 1.7142857;
+  margin-top: 1.7142857em;
+  margin-bottom: 1.7142857em;
+  overflow-x: auto;
+  padding: 1rem;
+}
+
+.prose code {
+  background-color: rgba(110, 118, 129, 0.1);
+  border-radius: 0.25rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.875em;
+  padding: 0.2em 0.4em;
+}
+
+.prose pre code {
+  background-color: transparent;
+  border-radius: 0;
+  font-size: inherit;
+  padding: 0;
+}
+
+/* Dark mode adjustments */
+.dark .prose code {
+  background-color: rgba(200, 200, 200, 0.1);
+}
