@@ -26,7 +26,7 @@ export function ShareButton({ url, title, description, className }: ShareButtonP
   const fullUrl =
     shareUrl && shareUrl.startsWith("http")
       ? shareUrl
-      : `${process.env.NEXT_PUBLIC_APP_URL || "https://ansa-fs.vercel.app"}${shareUrl || ""}`
+      : `${process.env.NEXT_PUBLIC_APP_URL || "https://dev-ansa.vercel.app"}${shareUrl || ""}`
 
   // Encoded values for sharing
   const encodedUrl = encodeURIComponent(fullUrl)
