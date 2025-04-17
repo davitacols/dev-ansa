@@ -22,8 +22,8 @@ export async function generateMetadata({ params }: BlogPostLayoutProps): Promise
   }
 
   return generateSocialMeta({
-    title: `${post.title} | ANSA File Structure`,
-    description: post.excerpt || `Read ${post.title} on ANSA File Structure`,
+    title: `${post.title} | ansa-fs Documentation`,
+    description: post.excerpt || `Read ${post.title} on ansa-fs Documentation`,
     url: `/blog/${post.slug}`,
     imageUrl: post.featuredImage || "/abstract-file-system.png",
     publishedTime: post.publishedAt?.toISOString() || post.createdAt.toISOString(),
