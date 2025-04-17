@@ -18,7 +18,7 @@ export function SiteFooter() {
               rel="noreferrer"
               className="font-medium text-zinc-900 dark:text-zinc-300 hover:underline"
             >
-              David Ansa
+              DataDisk
             </Link>
             . The source code is available on{" "}
             <Link
