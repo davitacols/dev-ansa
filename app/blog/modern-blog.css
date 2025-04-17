@@ -1,0 +1,254 @@
+/* Modern Blog Typography */
+
+.prose {
+    --tw-prose-body: theme("colors.zinc.700");
+    --tw-prose-headings: theme("colors.zinc.900");
+    --tw-prose-lead: theme("colors.zinc.600");
+    --tw-prose-links: theme("colors.primary.DEFAULT");
+    --tw-prose-bold: theme("colors.zinc.900");
+    --tw-prose-counters: theme("colors.zinc.500");
+    --tw-prose-bullets: theme("colors.zinc.300");
+    --tw-prose-hr: theme("colors.zinc.200");
+    --tw-prose-quotes: theme("colors.zinc.900");
+    --tw-prose-quote-borders: theme("colors.zinc.200");
+    --tw-prose-captions: theme("colors.zinc.500");
+    --tw-prose-code: theme("colors.zinc.900");
+    --tw-prose-pre-code: theme("colors.zinc.100");
+    --tw-prose-pre-bg: theme("colors.zinc.900");
+    --tw-prose-th-borders: theme("colors.zinc.300");
+    --tw-prose-td-borders: theme("colors.zinc.200");
+  
+    /* Dark mode */
+    --tw-prose-invert-body: theme("colors.zinc.300");
+    --tw-prose-invert-headings: theme("colors.zinc.200");
+    --tw-prose-invert-lead: theme("colors.zinc.400");
+    --tw-prose-invert-links: theme("colors.primary.DEFAULT");
+    --tw-prose-invert-bold: theme("colors.zinc.200");
+    --tw-prose-invert-counters: theme("colors.zinc.400");
+    --tw-prose-invert-bullets: theme("colors.zinc.600");
+    --tw-prose-invert-hr: theme("colors.zinc.700");
+    --tw-prose-invert-quotes: theme("colors.zinc.100");
+    --tw-prose-invert-quote-borders: theme("colors.zinc.700");
+    --tw-prose-invert-captions: theme("colors.zinc.400");
+    --tw-prose-invert-code: theme("colors.zinc.200");
+    --tw-prose-invert-pre-code: theme("colors.zinc.300");
+    --tw-prose-invert-pre-bg: theme("colors.zinc.800");
+    --tw-prose-invert-th-borders: theme("colors.zinc.600");
+    --tw-prose-invert-td-borders: theme("colors.zinc.700");
+  }
+  
+  /* Custom styling for specific elements */
+  .prose h1,
+  .prose h2,
+  .prose h3,
+  .prose h4,
+  .prose h5,
+  .prose h6 {
+    font-family: var(--font-heading, ui-sans-serif, system-ui);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-top: 2em;
+    margin-bottom: 0.75em;
+  }
+  
+  .prose h1 {
+    font-size: 2.25rem;
+    margin-top: 0;
+  }
+  
+  .prose h2 {
+    font-size: 1.875rem;
+    border-bottom: 1px solid var(--tw-prose-hr);
+    padding-bottom: 0.5rem;
+  }
+  
+  .prose h3 {
+    font-size: 1.5rem;
+  }
+  
+  .prose h4 {
+    font-size: 1.25rem;
+  }
+  
+  .prose p {
+    margin-top: 1.25em;
+    margin-bottom: 1.25em;
+    line-height: 1.7;
+  }
+  
+  .prose a {
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+    border-bottom: 1px solid var(--tw-prose-links);
+  }
+  
+  .prose a:hover {
+    border-bottom-width: 2px;
+  }
+  
+  .prose blockquote {
+    font-style: italic;
+    border-left-width: 4px;
+    border-left-color: var(--tw-prose-quote-borders);
+    padding-left: 1.5rem;
+    margin-left: 0;
+    margin-right: 0;
+    background-color: rgba(0, 0, 0, 0.03);
+    padding: 1rem 1.5rem;
+    border-radius: 0.375rem;
+  }
+  
+  .dark .prose blockquote {
+    background-color: rgba(255, 255, 255, 0.03);
+  }
+  
+  .prose blockquote p:first-of-type::before,
+  .prose blockquote p:last-of-type::after {
+    content: none;
+  }
+  
+  .prose code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.875em;
+    font-weight: 600;
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 0.2em 0.4em;
+    border-radius: 0.25rem;
+  }
+  
+  .dark .prose code {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .prose pre {
+    overflow-x: auto;
+    border-radius: 0.375rem;
+    padding: 1rem;
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+    font-size: 0.875em;
+    line-height: 1.7;
+    background-color: var(--tw-prose-pre-bg);
+    color: var(--tw-prose-pre-code);
+  }
+  
+  .prose pre code {
+    background-color: transparent;
+    padding: 0;
+    font-weight: 400;
+  }
+  
+  .prose img {
+    margin-top: 2em;
+    margin-bottom: 2em;
+    border-radius: 0.375rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  .prose figure {
+    margin-top: 2em;
+    margin-bottom: 2em;
+  }
+  
+  .prose figure > * {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  
+  .prose figcaption {
+    font-size: 0.875em;
+    line-height: 1.4;
+    color: var(--tw-prose-captions);
+    text-align: center;
+    margin-top: 0.75em;
+  }
+  
+  .prose hr {
+    margin-top: 3em;
+    margin-bottom: 3em;
+    border-color: var(--tw-prose-hr);
+  }
+  
+  .prose ol,
+  .prose ul {
+    margin-top: 1.25em;
+    margin-bottom: 1.25em;
+    padding-left: 1.625em;
+  }
+  
+  .prose ol li,
+  .prose ul li {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    padding-left: 0.375em;
+  }
+  
+  .prose ol > li::marker {
+    font-weight: 500;
+    color: var(--tw-prose-counters);
+  }
+  
+  .prose ul > li::marker {
+    color: var(--tw-prose-bullets);
+  }
+  
+  .prose table {
+    width: 100%;
+    table-layout: auto;
+    text-align: left;
+    margin-top: 2em;
+    margin-bottom: 2em;
+    font-size: 0.875em;
+    line-height: 1.7;
+    border-collapse: collapse;
+  }
+  
+  .prose thead {
+    border-bottom-width: 1px;
+    border-bottom-color: var(--tw-prose-th-borders);
+  }
+  
+  .prose thead th {
+    padding: 0.75em;
+    font-weight: 600;
+    vertical-align: bottom;
+  }
+  
+  .prose tbody tr {
+    border-bottom-width: 1px;
+    border-bottom-color: var(--tw-prose-td-borders);
+  }
+  
+  .prose tbody tr:last-child {
+    border-bottom-width: 0;
+  }
+  
+  .prose tbody td {
+    padding: 0.75em;
+    vertical-align: top;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 640px) {
+    .prose {
+      font-size: 1rem;
+    }
+  
+    .prose h1 {
+      font-size: 1.875rem;
+    }
+  
+    .prose h2 {
+      font-size: 1.5rem;
+    }
+  
+    .prose h3 {
+      font-size: 1.25rem;
+    }
+  
+    .prose h4 {
+      font-size: 1.125rem;
+    }
+  }
+  

@@ -28,6 +28,11 @@ import {
   Redo,
   EyeIcon,
   Pencil,
+  Type,
+  Minus,
+  Plus,
+  RotateCcw,
+  Settings,
 } from "lucide-react"
 
 import {
@@ -52,6 +57,16 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs"
 
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+
+import {
+  Slider
+} from "@/components/ui/slider"
+
 interface RichTextEditorProps {
   value: string
   onChange: (value: string) => void
@@ -59,6 +74,9 @@ interface RichTextEditorProps {
   minHeight?: string
   maxHeight?: string
   className?: string
+  fontFamily?: string
+  fontSize?: number
+  previewFontFamily?: string
 }
 
 export function RichTextEditor({
@@ -68,11 +86,17 @@ export function RichTextEditor({
   minHeight = "300px",
   maxHeight = "600px",
   className,
+  fontFamily = "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+  fontSize = 14,
+  previewFontFamily = "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
 }: RichTextEditorProps) {
   const [content, setContent] = useState(value)
   const [mode, setMode] = useState<"edit" | "preview" | "split">("edit")
   const [history, setHistory] = useState<string[]>([value])
   const [historyIndex, setHistoryIndex] = useState(0)
+  const [editorFontSize, setEditorFontSize] = useState(fontSize)
+  const [editorFontFamily, setEditorFontFamily] = useState(fontFamily)
+  const [previewFontFam, setPreviewFontFam] = useState(previewFontFamily)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
   
@@ -118,6 +142,12 @@ export function RichTextEditor({
       setContent(history[newIndex])
       onChange(history[newIndex])
     }
+  }
+
+  const resetAll = () => {
+    setEditorFontSize(fontSize)
+    setEditorFontFamily(fontFamily)
+    setPreviewFontFam(previewFontFamily)
   }
 
   const insertTag = (openTag: string, closeTag: string) => {
@@ -185,6 +215,25 @@ export function RichTextEditor({
   const codeButtons = [
     { icon: <Code size={16} />, action: () => insertTag("<code>", "</code>"), title: "Inline Code" },
     { icon: <CodeSquare size={16} />, action: () => insertCodeBlock(), title: "Code Block" },
+  ]
+  
+  const fontFamilies = [
+    { value: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace", label: "Monospace" },
+    { value: "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif", label: "Sans Serif" },
+    { value: "ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif", label: "Serif" },
+    { value: "'Fira Code', monospace", label: "Fira Code" },
+    { value: "'JetBrains Mono', monospace", label: "JetBrains Mono" },
+    { value: "'IBM Plex Mono', monospace", label: "IBM Plex Mono" },
+    { value: "'Source Code Pro', monospace", label: "Source Code Pro" },
+  ]
+  
+  const previewFonts = [
+    { value: "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif", label: "Sans Serif" },
+    { value: "ui-serif, Georgia, Cambria, 'Times New Roman', Times, serif", label: "Serif" },
+    { value: "'Inter', sans-serif", label: "Inter" },
+    { value: "'Merriweather', serif", label: "Merriweather" },
+    { value: "'Lora', serif", label: "Lora" },
+    { value: "'Open Sans', sans-serif", label: "Open Sans" },
   ]
   
   const languages = [
@@ -262,6 +311,108 @@ export function RichTextEditor({
           
           <div className="h-6 border-r mx-1" />
           
+          {/* Font settings */}
+          <div className="flex items-center mr-2">
+            <Popover>
+              <TooltipTrigger asChild>
+                <PopoverTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <Type size={16} />
+                  </Button>
+                </PopoverTrigger>
+              </TooltipTrigger>
+              <TooltipContent>Typography Settings</TooltipContent>
+              
+              <PopoverContent className="w-80">
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="font-medium mb-2 text-sm">Editor Font</h4>
+                    <Select 
+                      value={editorFontFamily} 
+                      onValueChange={setEditorFontFamily}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select font family" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {fontFamilies.map((font) => (
+                          <SelectItem key={font.label} value={font.value}>
+                            {font.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-medium mb-2 text-sm">Preview Font</h4>
+                    <Select 
+                      value={previewFontFam} 
+                      onValueChange={setPreviewFontFam}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select preview font" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {previewFonts.map((font) => (
+                          <SelectItem key={font.label} value={font.value}>
+                            {font.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <h4 className="font-medium text-sm">Font Size</h4>
+                      <div className="flex items-center gap-1">
+                        <Button 
+                          variant="outline" 
+                          size="icon" 
+                          className="h-6 w-6" 
+                          onClick={() => setEditorFontSize(Math.max(10, editorFontSize - 1))}
+                        >
+                          <Minus size={12} />
+                        </Button>
+                        <span className="w-8 text-center">{editorFontSize}px</span>
+                        <Button 
+                          variant="outline" 
+                          size="icon" 
+                          className="h-6 w-6" 
+                          onClick={() => setEditorFontSize(Math.min(24, editorFontSize + 1))}
+                        >
+                          <Plus size={12} />
+                        </Button>
+                      </div>
+                    </div>
+                    <Slider
+                      value={[editorFontSize]}
+                      min={10}
+                      max={24}
+                      step={1}
+                      onValueChange={(value) => setEditorFontSize(value[0])}
+                      className="w-full"
+                    />
+                  </div>
+                  
+                  <div className="flex justify-end pt-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="flex items-center gap-1"
+                      onClick={resetAll}
+                    >
+                      <RotateCcw size={14} /> Reset to defaults
+                    </Button>
+                  </div>
+                </div>
+              </PopoverContent>
+            </Popover>
+          </div>
+          
+          <div className="h-6 border-r mx-1" />
+          
           {toolbarGroups.map((group, groupIndex) => (
             <div key={groupIndex} className="flex items-center">
               {group.buttons.map((button, index) => (
@@ -326,8 +477,14 @@ export function RichTextEditor({
               onChange={handleChange}
               onBlur={handleBlur}
               placeholder={placeholder}
-              className="min-h-[300px] h-full w-full resize-none border-0 rounded-none p-4 font-mono focus-visible:ring-0 focus-visible:ring-offset-0"
-              style={{ minHeight, maxHeight: mode === "split" ? maxHeight : undefined }}
+              className="min-h-[300px] h-full w-full resize-none border-0 rounded-none p-4 focus-visible:ring-0 focus-visible:ring-offset-0"
+              style={{ 
+                minHeight, 
+                maxHeight: mode === "split" ? maxHeight : undefined,
+                fontFamily: editorFontFamily,
+                fontSize: `${editorFontSize}px`,
+                lineHeight: "1.5"
+              }}
             />
           </div>
         )}
@@ -339,6 +496,7 @@ export function RichTextEditor({
             style={{ 
               minHeight, 
               maxHeight: mode === "split" ? maxHeight : undefined,
+              fontFamily: previewFontFam
             }}
             dangerouslySetInnerHTML={{ __html: renderContent() }}
           />
@@ -347,8 +505,10 @@ export function RichTextEditor({
       
       {/* Status bar */}
       <div className="flex items-center justify-between p-2 text-xs text-muted-foreground border-t bg-muted/30">
-        <div>
-          {content.length} characters
+        <div className="flex items-center gap-2">
+          <span>{content.length} characters</span>
+          <div className="h-3 border-r mx-1" />
+          <span>{content.split(/\s+/).filter(Boolean).length} words</span>
         </div>
         <div className="flex gap-4">
           <span>HTML Editor</span>

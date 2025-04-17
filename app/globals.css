@@ -2,50 +2,103 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url("https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400;1,700&family=Source+Sans+Pro:wght@400;600;700&display=swap");
+/* Add these imports at the top of the file */
+@import url("https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap");
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
+    --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
+    --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 160 84% 39%;
-    --primary-foreground: 355.7 100% 97.3%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 160 84% 39%;
-    --radius: 0.75rem;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Add these custom properties to the :root section */
+    --font-serif: "Source Serif Pro", Georgia, "Times New Roman", serif;
+    --medium-text: #292929;
+    --medium-text-light: #757575;
+    --medium-accent: #1a8917;
+    --medium-accent-light: rgba(26, 137, 23, 0.3);
+    --medium-bg: #ffffff;
+    --medium-bg-light: #f9f9f9;
   }
-
   .dark {
-    --background: 240 10% 3.9%;
+    --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
+    --card: 0 0% 3.9%;
     --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
+    --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 160 84% 39%;
-    --primary-foreground: 355.7 100% 97.3%;
-    --secondary: 240 3.7% 15.9%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 160 84% 39%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+    --medium-text: #e6e6e6;
+    --medium-text-light: #a0a0a0;
+    --medium-accent: #4caf50;
+    --medium-accent-light: rgba(76, 175, 80, 0.3);
+    --medium-bg: #121212;
+    --medium-bg-light: #1e1e1e;
   }
 }
 
@@ -58,64 +111,111 @@
   }
 }
 
-.prose {
-  @apply max-w-none;
+/* Add this to your existing globals.css */
+.medium-content {
+  --font-serif: "Merriweather", Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-sans: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
+    "Open Sans", "Helvetica Neue", sans-serif;
+
+  font-family: var(--font-sans);
+  line-height: 1.8;
+  color: rgba(41, 41, 41, 1);
 }
 
-.prose code:not(pre code) {
-  @apply px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-sm;
+.medium-content h1,
+.medium-content h2,
+.medium-content h3,
+.medium-content h4,
+.medium-content h5,
+.medium-content h6,
+.medium-content blockquote {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  letter-spacing: -0.015em;
 }
 
-.prose table {
-  @apply w-full my-6 border-collapse;
+.medium-content p {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  line-height: 1.8;
+  margin-bottom: 2em;
 }
 
-.prose thead {
-  @apply bg-zinc-50 dark:bg-zinc-800;
+.medium-content blockquote {
+  font-style: italic;
+  font-size: 24px;
+  border-left: 3px solid rgba(41, 41, 41, 0.8);
+  padding-left: 20px;
+  margin-left: -23px;
+  margin-top: 2em;
+  margin-bottom: 2em;
 }
 
-.prose th {
-  @apply border px-4 py-2 text-left font-bold;
+.medium-content a {
+  color: #1a8917;
+  text-decoration: none;
+  background-image: linear-gradient(
+    transparent 0%,
+    transparent calc(50% - 8px),
+    rgba(26, 137, 23, 0.1) calc(50% - 8px),
+    rgba(26, 137, 23, 0.1) 100%
+  );
+  background-size: 100% 200%;
+  background-position: 0 0;
+  transition: background-position 120ms ease-in-out, padding 120ms ease-in-out;
 }
 
-.prose td {
-  @apply border px-4 py-2 text-left;
+.medium-content a:hover {
+  background-position: 0 100%;
+  padding-bottom: 2px;
 }
 
-.prose tr:nth-child(even) {
-  @apply bg-zinc-50 dark:bg-zinc-900;
+.medium-content img {
+  max-width: 100%;
+  margin: 2em auto;
+  display: block;
 }
 
-/* Markdown code highlighting */
-.prose pre {
-  background-color: #1e1e1e;
-  border-radius: 0.375rem;
-  color: #d4d4d4;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  font-size: 0.875rem;
-  line-height: 1.7142857;
-  margin-top: 1.7142857em;
-  margin-bottom: 1.7142857em;
+.medium-content code {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 3px 4px;
+  border-radius: 3px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 85%;
+}
+
+.medium-content pre {
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 1em;
+  border-radius: 5px;
   overflow-x: auto;
-  padding: 1rem;
+  margin: 2em 0;
 }
 
-.prose code {
-  background-color: rgba(110, 118, 129, 0.1);
-  border-radius: 0.25rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  font-size: 0.875em;
-  padding: 0.2em 0.4em;
-}
-
-.prose pre code {
+.medium-content pre code {
   background-color: transparent;
-  border-radius: 0;
-  font-size: inherit;
   padding: 0;
 }
 
 /* Dark mode adjustments */
-.dark .prose code {
-  background-color: rgba(200, 200, 200, 0.1);
+.dark .medium-content {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.dark .medium-content a {
+  color: #4caf50;
+  background-image: linear-gradient(
+    transparent 0%,
+    transparent calc(50% - 8px),
+    rgba(76, 175, 80, 0.1) calc(50% - 8px),
+    rgba(76, 175, 80, 0.1) 100%
+  );
+}
+
+.dark .medium-content code {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark .medium-content pre {
+  background-color: rgba(255, 255, 255, 0.05);
 }

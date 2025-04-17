@@ -24,14 +24,31 @@ export async function POST(request: NextRequest) {
     })
 
     if (!user) {
-      // Create a new guest user
-      user = await prisma.user.create({
-        data: {
-          name,
-          email,
-          role: "USER",
-        },
-      })
+      try {
+        // Create a new guest user without any timestamp fields
+        // Let Prisma handle them automatically based on the schema
+        user = await prisma.user.create({
+          data: {
+            name,
+            email,
+            role: "USER",
+            // No need to set createdAt or updatedAt as they're handled by Prisma
+          },
+        })
+      } catch (error) {
+        console.error("Error creating user:", error)
+        // If that fails, try with explicit timestamps as a fallback
+        const now = new Date()
+        user = await prisma.user.create({
+          data: {
+            name,
+            email,
+            role: "USER",
+            createdAt: now,
+            updatedAt: now,
+          },
+        })
+      }
     }
 
     // Create comment

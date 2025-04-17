@@ -50,6 +50,8 @@ model User {
   posts         BlogPost[]
   comments      Comment[]
   suggestions   FeatureSuggestion[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @default(now()) @updatedAt
 }
 
 enum Role {

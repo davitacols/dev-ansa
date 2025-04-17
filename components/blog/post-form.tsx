@@ -69,6 +69,87 @@ interface PostFormProps {
   isEditing?: boolean
 }
 
+// Add global styles for Medium typography
+const globalMediumStyles = `
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro:wght@400;600;700&family=Charter:wght@400;700&family=Merriweather:wght@400;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+  :root {
+    --font-serif: 'Charter', 'Source Serif Pro', 'Merriweather', Georgia, serif;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  /* Apply Medium-like typography */
+  .medium-typography h1, .medium-typography h2, .medium-typography h3, .medium-typography h4 {
+    font-family: var(--font-serif);
+    letter-spacing: -0.011em;
+    line-height: 1.2;
+  }
+
+  .medium-typography p, .medium-typography span, .medium-typography div, .medium-typography li {
+    font-family: var(--font-sans);
+    letter-spacing: -0.003em;
+    line-height: 1.58;
+  }
+
+  .medium-typography .title-input {
+    font-family: var(--font-serif);
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.016em;
+    line-height: 1.25;
+  }
+
+  .medium-typography .content-textarea {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    letter-spacing: -0.004em;
+    line-height: 1.58;
+  }
+  
+  .medium-typography .card-title {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    letter-spacing: -0.016em;
+  }
+
+  .medium-typography .markdown-preview {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    letter-spacing: -0.004em;
+    line-height: 1.58;
+  }
+
+  .medium-typography .markdown-preview h1, 
+  .medium-typography .markdown-preview h2 {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    letter-spacing: -0.016em;
+    margin-top: 2em;
+    margin-bottom: 0.8em;
+  }
+
+  .medium-typography .markdown-preview h2 {
+    font-size: 24px;
+  }
+
+  .medium-typography .markdown-preview p {
+    margin-bottom: 1.5em;
+  }
+
+  .medium-typography .label {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  .medium-typography .description {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: #6B6B6B;
+  }
+`
+
 export function PostForm({ categories, tags, initialData = {}, isEditing = false }: PostFormProps) {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -175,418 +256,39 @@ export function PostForm({ categories, tags, initialData = {}, isEditing = false
   const watchContent = form.watch("content")
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <Card className="border border-zinc-200 dark:border-zinc-800 shadow-sm">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-2xl font-bold tracking-tight">
-              {isEditing ? "Edit Post" : "Create New Post"}
-            </CardTitle>
-            <CardDescription>
-              {isEditing
-                ? "Update your existing blog post with new content and settings."
-                : "Create a new blog post with rich content and formatting."}
-            </CardDescription>
-          </CardHeader>
+    <>
+      {/* Add the global styles */}
+      <style jsx global>{globalMediumStyles}</style>
+      
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 medium-typography">
+          <Card className="border border-zinc-200 dark:border-zinc-800 shadow-sm">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-2xl font-bold tracking-tight card-title">
+                {isEditing ? "Edit Post" : "Create New Post"}
+              </CardTitle>
+              <CardDescription className="description">
+                {isEditing
+                  ? "Update your existing blog post with new content and settings."
+                  : "Create a new blog post with rich content and formatting."}
+              </CardDescription>
+            </CardHeader>
 
-          <CardContent className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormField
-                control={form.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-medium">Title</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter post title..." {...field} className="focus-visible:ring-emerald-500" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="slug"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-medium">URL Slug</FormLabel>
-                    <div className="flex gap-2">
-                      <FormControl>
-                        <div className="flex rounded-md overflow-hidden border w-full">
-                          <div className="bg-zinc-100 dark:bg-zinc-800 px-2 flex items-center border-r text-sm text-zinc-500">
-                            /blog/
-                          </div>
-                          <Input
-                            placeholder="post-slug"
-                            {...field}
-                            className="border-0 focus-visible:ring-emerald-500 rounded-none"
-                          />
-                        </div>
-                      </FormControl>
-                      <Button type="button" variant="outline" onClick={generateSlug} size="sm" className="text-xs">
-                        <Hash className="h-3 w-3 mr-1" />
-                        Generate
-                      </Button>
-                    </div>
-                    <FormDescription className="text-xs">The URL-friendly version of the title.</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <FormField
-              control={form.control}
-              name="excerpt"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm font-medium">Excerpt</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Write a brief summary of your post..."
-                      {...field}
-                      rows={3}
-                      className="resize-none focus-visible:ring-emerald-500"
-                    />
-                  </FormControl>
-                  <FormDescription className="text-xs">
-                    A short summary that appears in blog listings and social shares.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="content"
-              render={({ field }) => (
-                <FormItem className="col-span-full">
-                  <div className="flex items-center justify-between">
-                    <FormLabel className="text-sm font-medium">Content</FormLabel>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs text-zinc-500">{watchContent?.length || 0} characters</span>
-                    </div>
-                  </div>
-                  <FormDescription className="text-xs mb-2">
-                    Write your post content using Markdown for rich formatting.
-                  </FormDescription>
-
-                  <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                    <div className="flex items-center justify-between mb-2">
-                      <TabsList className="h-9 p-0.5">
-                        <TabsTrigger value="edit" className="flex items-center gap-1 h-8 px-3">
-                          <Pencil className="w-3.5 h-3.5" />
-                          <span>Edit</span>
-                        </TabsTrigger>
-                        <TabsTrigger value="preview" className="flex items-center gap-1 h-8 px-3">
-                          <Eye className="w-3.5 h-3.5" />
-                          <span>Preview</span>
-                        </TabsTrigger>
-                      </TabsList>
-
-                      <div className="flex items-center gap-2">
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 text-xs"
-                          onClick={() => {}} // Would connect to autosave
-                        >
-                          <Save className="h-3.5 w-3.5 mr-1" />
-                          Autosaved
-                        </Button>
-                      </div>
-                    </div>
-
-                    <TabsContent value="edit" className="mt-0">
-                      <TooltipProvider>
-                        <div className="bg-zinc-50 dark:bg-zinc-900 rounded-t-md border border-b-0 p-1 flex flex-wrap gap-0.5">
-                          <div className="flex items-center gap-0.5 mr-2">
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button
-                                  type="button"
-                                  variant="ghost"
-                                  size="sm"
-                                  className="h-8 w-8 p-0"
-                                  onClick={() => {}} // Would implement undo
-                                >
-                                  <Undo className="h-4 w-4" />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent side="bottom">Undo</TooltipContent>
-                            </Tooltip>
-
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button
-                                  type="button"
-                                  variant="ghost"
-                                  size="sm"
-                                  className="h-8 w-8 p-0"
-                                  onClick={() => {}} // Would implement redo
-                                >
-                                  <Redo className="h-4 w-4" />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent side="bottom">Redo</TooltipContent>
-                            </Tooltip>
-                          </div>
-
-                          <Separator orientation="vertical" className="h-8 mx-1" />
-
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                className="h-8 w-8 p-0"
-                                onClick={() => insertMarkdown("**|**")}
-                              >
-                                <Bold className="h-4 w-4" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent side="bottom">Bold</TooltipContent>
-                          </Tooltip>
-
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                className="h-8 w-8 p-0"
-                                onClick={() => insertMarkdown("*|*")}
-                              >
-                                <Italic className="h-4 w-4" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent side="bottom">Italic</TooltipContent>
-                          </Tooltip>
-
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                className="h-8 w-8 p-0"
-                                onClick={() => insertMarkdown("\n## |")}
-                              >
-                                <Heading2 className="h-4 w-4" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent side="bottom">Heading</TooltipContent>
-                          </Tooltip>
-
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                className="h-8 w-8 p-0"
-                                onClick={() => insertMarkdown("\n> |")}
-                              >
-                                <Quote className="h-4 w-4" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent side="bottom">Quote</TooltipContent>
-                          </Tooltip>
-
-                          <Separator orientation="vertical" className="h-8 mx-1" />
-
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                className="h-8 w-8 p-0"
-                                onClick={() => insertMarkdown("\n1. |\n2. \n3. ")}
-                              >
-                                <ListOrdered className="h-4 w-4" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent side="bottom">Ordered List</TooltipContent>
-                          </Tooltip>
-
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                className="h-8 w-8 p-0"
-                                onClick={() => insertMarkdown("\n- |\n- \n- ")}
-                              >
-                                <ListChecks className="h-4 w-4" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent side="bottom">Bullet List</TooltipContent>
-                          </Tooltip>
-
-                          <Separator orientation="vertical" className="h-8 mx-1" />
-
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                className="h-8 w-8 p-0"
-                                onClick={() => insertMarkdown("`|`")}
-                              >
-                                <Code className="h-4 w-4" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent side="bottom">Inline Code</TooltipContent>
-                          </Tooltip>
-
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                className="h-8 w-8 p-0"
-                                onClick={() => insertMarkdown("\n```\n|\n```")}
-                              >
-                                <CodeSquare className="h-4 w-4" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent side="bottom">Code Block</TooltipContent>
-                          </Tooltip>
-
-                          <Separator orientation="vertical" className="h-8 mx-1" />
-
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                className="h-8 w-8 p-0"
-                                onClick={() => insertMarkdown("[|](url)")}
-                              >
-                                <Link2 className="h-4 w-4" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent side="bottom">Link</TooltipContent>
-                          </Tooltip>
-
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                className="h-8 w-8 p-0"
-                                onClick={() => insertMarkdown("![alt text](|)")}
-                              >
-                                <ImageIcon className="h-4 w-4" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent side="bottom">Image</TooltipContent>
-                          </Tooltip>
-                        </div>
-                      </TooltipProvider>
-
-                      <FormControl>
-                        <Textarea
-                          placeholder="Start writing your post here..."
-                          {...field}
-                          rows={15}
-                          className="font-mono text-sm resize-none rounded-t-none focus-visible:ring-emerald-500 border-zinc-200 dark:border-zinc-800"
-                        />
-                      </FormControl>
-                    </TabsContent>
-
-                    <TabsContent value="preview" className="mt-0">
-                      <ScrollArea className="w-full border rounded-md p-6 bg-white dark:bg-zinc-950 min-h-[400px] max-h-[500px]">
-                        {watchContent ? (
-                          <MarkdownRenderer content={watchContent} />
-                        ) : (
-                          <div className="flex flex-col items-center justify-center h-full min-h-[300px] text-center">
-                            <Eye className="h-12 w-12 text-zinc-300 dark:text-zinc-700 mb-2" />
-                            <p className="text-zinc-500 dark:text-zinc-400">Nothing to preview yet...</p>
-                            <p className="text-zinc-400 dark:text-zinc-500 text-sm">
-                              Start writing in the editor to see a preview.
-                            </p>
-                          </div>
-                        )}
-                      </ScrollArea>
-                    </TabsContent>
-                  </Tabs>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormField
-                control={form.control}
-                name="featuredImage"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-medium">Featured Image</FormLabel>
-                    <div className="flex flex-col gap-3">
-                      <FormControl>
-                        <div className="flex gap-2">
-                          <Input
-                            placeholder="https://example.com/image.jpg"
-                            {...field}
-                            className="focus-visible:ring-emerald-500"
-                          />
-                          <Button type="button" variant="outline" size="icon" className="shrink-0">
-                            <FileImage className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </FormControl>
-
-                      {field.value && (
-                        <div className="mt-2 relative aspect-video rounded-md overflow-hidden bg-zinc-100 dark:bg-zinc-800">
-                          <div className="flex items-center justify-center h-full">
-                            <FileImage className="h-8 w-8 text-zinc-400" />
-                          </div>
-                          {/* Image preview would be shown here if uploaded */}
-                        </div>
-                      )}
-
-                      <FormDescription className="text-xs">
-                        URL to the featured image that appears at the top of your post and in social shares.
-                      </FormDescription>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className="space-y-6">
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormField
                   control={form.control}
-                  name="categoryId"
+                  name="title"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-sm font-medium">Category</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger className="focus:ring-emerald-500">
-                            <SelectValue placeholder="Select a category" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="none">None</SelectItem>
-                          {categories.map((category) => (
-                            <SelectItem key={category.id} value={category.id}>
-                              {category.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <FormLabel className="label text-sm font-medium">Title</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="Enter post title..." 
+                          {...field} 
+                          className="focus-visible:ring-emerald-500 title-input" 
+                        />
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -594,114 +296,504 @@ export function PostForm({ categories, tags, initialData = {}, isEditing = false
 
                 <FormField
                   control={form.control}
-                  name="published"
+                  name="slug"
                   render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                          className="data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600"
-                        />
-                      </FormControl>
-                      <div className="space-y-1 leading-none">
-                        <FormLabel>Published</FormLabel>
-                        <FormDescription className="text-xs">
-                          When checked, this post will be visible to the public.
-                        </FormDescription>
+                    <FormItem>
+                      <FormLabel className="label text-sm font-medium">URL Slug</FormLabel>
+                      <div className="flex gap-2">
+                        <FormControl>
+                          <div className="flex rounded-md overflow-hidden border w-full">
+                            <div className="bg-zinc-100 dark:bg-zinc-800 px-2 flex items-center border-r text-sm text-zinc-500">
+                              /blog/
+                            </div>
+                            <Input
+                              placeholder="post-slug"
+                              {...field}
+                              className="border-0 focus-visible:ring-emerald-500 rounded-none"
+                            />
+                          </div>
+                        </FormControl>
+                        <Button type="button" variant="outline" onClick={generateSlug} size="sm" className="text-xs">
+                          <Hash className="h-3 w-3 mr-1" />
+                          Generate
+                        </Button>
                       </div>
+                      <FormDescription className="description text-xs">The URL-friendly version of the title.</FormDescription>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
-            </div>
 
-            <div>
-              <FormLabel className="text-sm font-medium">Tags</FormLabel>
-              <div className="mt-2">
-                <div className="flex flex-wrap gap-2 mb-2">
-                  {selectedTags.length > 0 ? (
-                    selectedTags.map((tagId) => {
-                      const tag = tags.find((t) => t.id === tagId)
-                      return tag ? (
-                        <Badge
-                          key={tag.id}
-                          variant="secondary"
-                          className="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-900/20 dark:text-emerald-400"
-                        >
-                          {tag.name}
-                        </Badge>
-                      ) : null
-                    })
-                  ) : (
-                    <p className="text-sm text-zinc-500">No tags selected</p>
-                  )}
-                </div>
+              <FormField
+                control={form.control}
+                name="excerpt"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="label text-sm font-medium">Excerpt</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Write a brief summary of your post..."
+                        {...field}
+                        rows={3}
+                        className="resize-none focus-visible:ring-emerald-500"
+                      />
+                    </FormControl>
+                    <FormDescription className="description text-xs">
+                      A short summary that appears in blog listings and social shares.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                <ScrollArea className="h-32 border rounded-md p-2">
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                    {tags.map((tag) => (
-                      <div key={tag.id} className="flex items-center space-x-2">
-                        <Checkbox
-                          id={`tag-${tag.id}`}
-                          checked={selectedTags.includes(tag.id)}
-                          onCheckedChange={(checked) => handleTagChange(tag.id, checked as boolean)}
-                          className="data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600"
-                        />
-                        <label htmlFor={`tag-${tag.id}`} className="text-sm leading-none cursor-pointer">
-                          {tag.name}
-                        </label>
+              <FormField
+                control={form.control}
+                name="content"
+                render={({ field }) => (
+                  <FormItem className="col-span-full">
+                    <div className="flex items-center justify-between">
+                      <FormLabel className="label text-sm font-medium">Content</FormLabel>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-zinc-500">{watchContent?.length || 0} characters</span>
                       </div>
-                    ))}
-                  </div>
-                </ScrollArea>
-              </div>
-            </div>
-          </CardContent>
+                    </div>
+                    <FormDescription className="description text-xs mb-2">
+                      Write your post content using Markdown for rich formatting.
+                    </FormDescription>
 
-          <CardFooter className="flex justify-between pt-6 border-t">
-            <Button type="button" variant="outline" onClick={() => router.push("/admin/blog")}>
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              className="bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white"
-            >
-              {isSubmitting ? (
-                <>
-                  <svg
-                    className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                  Saving...
-                </>
-              ) : (
-                <>
-                  <Save className="h-4 w-4 mr-2" />
-                  {isEditing ? "Update Post" : "Publish Post"}
-                </>
-              )}
-            </Button>
-          </CardFooter>
-        </Card>
-      </form>
-    </Form>
+                    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                      <div className="flex items-center justify-between mb-2">
+                        <TabsList className="h-9 p-0.5">
+                          <TabsTrigger value="edit" className="flex items-center gap-1 h-8 px-3">
+                            <Pencil className="w-3.5 h-3.5" />
+                            <span>Edit</span>
+                          </TabsTrigger>
+                          <TabsTrigger value="preview" className="flex items-center gap-1 h-8 px-3">
+                            <Eye className="w-3.5 h-3.5" />
+                            <span>Preview</span>
+                          </TabsTrigger>
+                        </TabsList>
+
+                        <div className="flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 text-xs"
+                            onClick={() => {}} // Would connect to autosave
+                          >
+                            <Save className="h-3.5 w-3.5 mr-1" />
+                            Autosaved
+                          </Button>
+                        </div>
+                      </div>
+
+                      <TabsContent value="edit" className="mt-0">
+                        <TooltipProvider>
+                          <div className="bg-zinc-50 dark:bg-zinc-900 rounded-t-md border border-b-0 p-1 flex flex-wrap gap-0.5">
+                            <div className="flex items-center gap-0.5 mr-2">
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-8 w-8 p-0"
+                                    onClick={() => {}} // Would implement undo
+                                  >
+                                    <Undo className="h-4 w-4" />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent side="bottom">Undo</TooltipContent>
+                              </Tooltip>
+
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-8 w-8 p-0"
+                                    onClick={() => {}} // Would implement redo
+                                  >
+                                    <Redo className="h-4 w-4" />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent side="bottom">Redo</TooltipContent>
+                              </Tooltip>
+                            </div>
+
+                            <Separator orientation="vertical" className="h-8 mx-1" />
+
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-8 w-8 p-0"
+                                  onClick={() => insertMarkdown("**|**")}
+                                >
+                                  <Bold className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent side="bottom">Bold</TooltipContent>
+                            </Tooltip>
+
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-8 w-8 p-0"
+                                  onClick={() => insertMarkdown("*|*")}
+                                >
+                                  <Italic className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent side="bottom">Italic</TooltipContent>
+                            </Tooltip>
+
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-8 w-8 p-0"
+                                  onClick={() => insertMarkdown("\n## |")}
+                                >
+                                  <Heading2 className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent side="bottom">Heading</TooltipContent>
+                            </Tooltip>
+
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-8 w-8 p-0"
+                                  onClick={() => insertMarkdown("\n> |")}
+                                >
+                                  <Quote className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent side="bottom">Quote</TooltipContent>
+                            </Tooltip>
+
+                            <Separator orientation="vertical" className="h-8 mx-1" />
+
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-8 w-8 p-0"
+                                  onClick={() => insertMarkdown("\n1. |\n2. \n3. ")}
+                                >
+                                  <ListOrdered className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent side="bottom">Ordered List</TooltipContent>
+                            </Tooltip>
+
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-8 w-8 p-0"
+                                  onClick={() => insertMarkdown("\n- |\n- \n- ")}
+                                >
+                                  <ListChecks className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent side="bottom">Bullet List</TooltipContent>
+                            </Tooltip>
+
+                            <Separator orientation="vertical" className="h-8 mx-1" />
+
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-8 w-8 p-0"
+                                  onClick={() => insertMarkdown("`|`")}
+                                >
+                                  <Code className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent side="bottom">Inline Code</TooltipContent>
+                            </Tooltip>
+
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-8 w-8 p-0"
+                                  onClick={() => insertMarkdown("\n```\n|\n```")}
+                                >
+                                  <CodeSquare className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent side="bottom">Code Block</TooltipContent>
+                            </Tooltip>
+
+                            <Separator orientation="vertical" className="h-8 mx-1" />
+
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-8 w-8 p-0"
+                                  onClick={() => insertMarkdown("[|](url)")}
+                                >
+                                  <Link2 className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent side="bottom">Link</TooltipContent>
+                            </Tooltip>
+
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-8 w-8 p-0"
+                                  onClick={() => insertMarkdown("![alt text](|)")}
+                                >
+                                  <ImageIcon className="h-4 w-4" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent side="bottom">Image</TooltipContent>
+                            </Tooltip>
+                          </div>
+                        </TooltipProvider>
+
+                        <FormControl>
+                          <Textarea
+                            placeholder="Start writing your post here..."
+                            {...field}
+                            rows={15}
+                            className="content-textarea font-serif text-lg resize-none rounded-t-none focus-visible:ring-emerald-500 border-zinc-200 dark:border-zinc-800"
+                          />
+                        </FormControl>
+                      </TabsContent>
+
+                      <TabsContent value="preview" className="mt-0">
+                        <ScrollArea className="w-full border rounded-md p-6 bg-white dark:bg-zinc-950 min-h-[400px] max-h-[500px] markdown-preview">
+                          {watchContent ? (
+                            <div className="markdown-preview">
+                              <MarkdownRenderer content={watchContent} />
+                            </div>
+                          ) : (
+                            <div className="flex flex-col items-center justify-center h-full min-h-[300px] text-center">
+                              <Eye className="h-12 w-12 text-zinc-300 dark:text-zinc-700 mb-2" />
+                              <p className="text-zinc-500 dark:text-zinc-400">Nothing to preview yet...</p>
+                              <p className="text-zinc-400 dark:text-zinc-500 text-sm">
+                                Start writing in the editor to see a preview.
+                              </p>
+                            </div>
+                          )}
+                        </ScrollArea>
+                      </TabsContent>
+                    </Tabs>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormField
+                  control={form.control}
+                  name="featuredImage"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="label text-sm font-medium">Featured Image</FormLabel>
+                      <div className="flex flex-col gap-3">
+                        <FormControl>
+                          <div className="flex gap-2">
+                            <Input
+                              placeholder="https://example.com/image.jpg"
+                              {...field}
+                              className="focus-visible:ring-emerald-500"
+                            />
+                            <Button type="button" variant="outline" size="icon" className="shrink-0">
+                              <FileImage className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </FormControl>
+
+                        {field.value && (
+                          <div className="mt-2 relative aspect-video rounded-md overflow-hidden bg-zinc-100 dark:bg-zinc-800">
+                            <div className="flex items-center justify-center h-full">
+                              <FileImage className="h-8 w-8 text-zinc-400" />
+                            </div>
+                            {/* Image preview would be shown here if uploaded */}
+                          </div>
+                        )}
+
+                        <FormDescription className="description text-xs">
+                          URL to the featured image that appears at the top of your post and in social shares.
+                        </FormDescription>
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <div className="space-y-6">
+                  <FormField
+                    control={form.control}
+                    name="categoryId"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="label text-sm font-medium">Category</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger className="focus:ring-emerald-500">
+                              <SelectValue placeholder="Select a category" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="none">None</SelectItem>
+                            {categories.map((category) => (
+                              <SelectItem key={category.id} value={category.id}>
+                                {category.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="published"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                            className="data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600"
+                          />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel className="label">Published</FormLabel>
+                          <FormDescription className="description text-xs">
+                            When checked, this post will be visible to the public.
+                          </FormDescription>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <FormLabel className="label text-sm font-medium">Tags</FormLabel>
+                <div className="mt-2">
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    {selectedTags.length > 0 ? (
+                      selectedTags.map((tagId) => {
+                        const tag = tags.find((t) => t.id === tagId)
+                        return tag ? (
+                          <Badge
+                            key={tag.id}
+                            variant="secondary"
+                            className="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-900/20 dark:text-emerald-400"
+                          >
+                            {tag.name}
+                          </Badge>
+                        ) : null
+                      })
+                    ) : (
+                      <p className="text-sm text-zinc-500">No tags selected</p>
+                    )}
+                  </div>
+
+                  <ScrollArea className="h-32 border rounded-md p-2">
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                      {tags.map((tag) => (
+                        <div key={tag.id} className="flex items-center space-x-2">
+                          <Checkbox
+                            id={`tag-${tag.id}`}
+                            checked={selectedTags.includes(tag.id)}
+                            onCheckedChange={(checked) => handleTagChange(tag.id, checked as boolean)}
+                            className="data-[state=checked]:bg-emerald-600 data-[state=checked]:border-emerald-600"
+                          />
+                          <label htmlFor={`tag-${tag.id}`} className="text-sm leading-none cursor-pointer">
+                            {tag.name}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </ScrollArea>
+                </div>
+              </div>
+            </CardContent>
+
+            <CardFooter className="flex justify-between pt-6 border-t">
+              <Button type="button" variant="outline" onClick={() => router.push("/admin/blog")}>
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white"
+              >
+                {isSubmitting ? (
+                  <>
+                    <svg
+                      className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <Save className="h-4 w-4 mr-2" />
+                    {isEditing ? "Update Post" : "Publish Post"}
+                  </>
+                )}
+              </Button>
+            </CardFooter>
+          </Card>
+        </form>
+      </Form>
+    </>
   )
 }

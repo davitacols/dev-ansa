@@ -1,0 +1,207 @@
+/* Medium-style typography CSS */
+@import url("https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Source+Sans+Pro:wght@400;600;700&display=swap");
+
+/* Base typography */
+.medium-content {
+  font-family: "Merriweather", Georgia, Cambria, "Times New Roman", Times, serif;
+  line-height: 1.8;
+  color: rgba(41, 41, 41, 1);
+}
+
+.dark .medium-content {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Headings */
+.medium-content h1,
+.medium-content h2,
+.medium-content h3,
+.medium-content h4,
+.medium-content h5,
+.medium-content h6 {
+  font-family: "Merriweather", Georgia, Cambria, "Times New Roman", Times, serif;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  margin-top: 2em;
+  margin-bottom: 0.8em;
+}
+
+.medium-content h1 {
+  font-size: 2.5rem;
+  line-height: 1.2;
+  margin-top: 0;
+}
+
+.medium-content h2 {
+  font-size: 1.9rem;
+  line-height: 1.3;
+}
+
+.medium-content h3 {
+  font-size: 1.5rem;
+  line-height: 1.4;
+}
+
+/* Paragraphs */
+.medium-content p {
+  font-family: "Merriweather", Georgia, Cambria, "Times New Roman", Times, serif;
+  font-size: 1.125rem;
+  line-height: 1.8;
+  margin-bottom: 1.5em;
+}
+
+/* Links */
+.medium-content a {
+  color: #03a87c;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(3, 168, 124, 0.3);
+  transition: border-color 0.2s ease;
+}
+
+.medium-content a:hover {
+  border-bottom-color: rgba(3, 168, 124, 0.8);
+}
+
+.dark .medium-content a {
+  color: #25d0ab;
+  border-bottom-color: rgba(37, 208, 171, 0.3);
+}
+
+.dark .medium-content a:hover {
+  border-bottom-color: rgba(37, 208, 171, 0.8);
+}
+
+/* Blockquotes - Medium style */
+.medium-content blockquote {
+  font-family: "Merriweather", Georgia, Cambria, "Times New Roman", Times, serif;
+  font-style: italic;
+  font-size: 1.5rem;
+  line-height: 1.6;
+  border-left: 3px solid rgba(41, 41, 41, 0.8);
+  padding-left: 1.5rem;
+  margin-left: 0;
+  margin-right: 0;
+  color: rgba(41, 41, 41, 0.9);
+}
+
+.dark .medium-content blockquote {
+  border-left-color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Lists */
+.medium-content ul,
+.medium-content ol {
+  font-family: "Merriweather", Georgia, Cambria, "Times New Roman", Times, serif;
+  margin-bottom: 1.5em;
+  padding-left: 1.5em;
+}
+
+.medium-content li {
+  margin-bottom: 0.5em;
+}
+
+/* Code blocks */
+.medium-content pre {
+  background-color: rgba(0, 0, 0, 0.03);
+  border-radius: 3px;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.9rem;
+  padding: 1.25rem;
+  overflow-x: auto;
+  margin: 1.5em 0;
+}
+
+.dark .medium-content pre {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.medium-content code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.9em;
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+}
+
+.dark .medium-content code {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Images */
+.medium-content img {
+  max-width: 100%;
+  height: auto;
+  margin: 2em auto;
+  display: block;
+}
+
+/* Image captions */
+.medium-content img + em {
+  display: block;
+  text-align: center;
+  font-size: 0.875rem;
+  color: rgba(117, 117, 117, 1);
+  margin-top: -1.5em;
+  margin-bottom: 2em;
+}
+
+.dark .medium-content img + em {
+  color: rgba(200, 200, 200, 1);
+}
+
+/* Horizontal rule */
+.medium-content hr {
+  border: none;
+  border-top: 1px solid rgba(230, 230, 230, 1);
+  margin: 2em 0;
+}
+
+.dark .medium-content hr {
+  border-top-color: rgba(75, 75, 75, 1);
+}
+
+/* Tables */
+.medium-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2em 0;
+  font-size: 0.9em;
+}
+
+.medium-content th {
+  background-color: rgba(0, 0, 0, 0.03);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75em;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.medium-content td {
+  padding: 0.75em;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.dark .medium-content th {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark .medium-content td {
+  border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Medium-style drop caps */
+.medium-content p:first-of-type:first-letter {
+  float: left;
+  font-family: "Merriweather", Georgia, Cambria, "Times New Roman", Times, serif;
+  font-size: 4rem;
+  line-height: 1;
+  padding-right: 0.5rem;
+  margin-top: 0.25rem;
+  color: rgba(41, 41, 41, 1);
+}
+
+.dark .medium-content p:first-of-type:first-letter {
+  color: rgba(255, 255, 255, 0.9);
+}
